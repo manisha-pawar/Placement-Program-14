@@ -19,21 +19,17 @@ public class Main {
         System.out.println(ways);
     }
     
+
     public static int ccc(int[]coins,int amt) {
         int[]dp = new int[amt+1];
         
-        //dp[i] -> ways to pay 'i' amount
-        
         dp[0] = 1;
         
-        
-        for(int j = 0; j < coins.length;j++) {
-            for(int i = 1; i <= amt;i++) {
-                int rem_amt = i - coins[j];
+        for(int i=0; i < coins.length;i++) {
+            for(int j = coins[i]; j <= amt;j++) {
+                int rem_amt = j - coins[i];
                 
-                if(rem_amt >= 0) {
-                    dp[i] += dp[rem_amt];
-                }
+                dp[j] += dp[rem_amt];
             }
         }
         
