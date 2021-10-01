@@ -98,7 +98,7 @@ public class Main {
 
 
 
-        //reverse a linked list data recursive
+        //reverse a linked list data recursive - method 1
         Node ln;
         public void reverseDR() {
             ln = head;
@@ -121,6 +121,74 @@ public class Main {
 
                 ln = ln.next; //heap change (this.ln = this.ln.next)
             }
+        }
+
+
+
+        //reverse a linked list data recursive - method 2
+        public void reverseDR() {
+            reverseDRH(head, 0);
+        }
+
+        private Node reverseDRH(Node rn, int lev) {
+            if (rn == null) {
+                return head;
+            }
+
+            Node ln = reverseDRH(rn.next, lev + 1);
+
+            if (lev >= size / 2) {
+                int ld = ln.data;
+                int rd = rn.data;
+                ln.data = rd;
+                rn.data = ld;
+            }
+
+            return ln.next;
+        }
+
+
+
+
+        //reverse a linked list pointer recursive
+        private void reversePRHelper(Node prev) {
+            if (prev.next == null) {
+                return;
+            }
+
+            reversePRHelper(prev.next);
+
+            Node curr = prev.next;
+            curr.next = prev;
+        }
+
+        public void reversePR() {
+            // write your code here
+            reversePRHelper(head);
+            head.next = null;
+
+            //swap head & tail
+            Node temp = head;
+            head = tail;
+            tail = temp;
+        }
+
+
+
+
+        //display reverse
+        private void displayReverseHelper(Node node) {
+            if (node == null) {
+                return;
+            }
+
+            displayReverseHelper(node.next);
+            System.out.print(node.data + " ");
+        }
+
+        public void displayReverse() {
+            displayReverseHelper(head);
+            System.out.println();
         }
 
 
