@@ -218,7 +218,81 @@ public class Main {
         this.size = ans.size;
 
     }
+
+
+
+
+    //fold a linked list
+    Node ln;
+    public void fold() {
+        // write your code here
+        ln = head;
+        fold_helper(head, 0);
+    }
+
+    private void fold_helper(Node rn, int lev) {
+        if (rn == null) {
+            return;
+        }
+
+        fold_helper(rn.next, lev + 1);
+
+        if (lev > size / 2) {
+            //work
+            Node temp = ln.next;
+            ln.next = rn;
+            rn.next = temp;
+            ln = temp;
+        } else if (lev == size / 2) {
+            //set tail
+            tail = rn;
+            tail.next = null;
+        } else {
+            //do nothing
+        }
+    }
+
+
+
+
+    //add two linked lists
+    private static int add_helper(Node p1, int pv1, Node p2, int pv2, LinkedList ans) {
+        if (p1 == null && p2 == null) {
+            return 0;
+        }
+
+        int sum = 0;
+        if (pv1 > pv2) {
+            //move forward in first list
+            int c = add_helper(p1.next, pv1 - 1, p2, pv2, ans);
+            sum = c + p1.data;
+        } else if (pv1 < pv2) {
+            //move forward in second list
+            int c = add_helper(p1, pv1, p2.next, pv2 - 1, ans);
+            sum = c + p2.data;
+        } else {
+            //move forward in both lists
+            int c = add_helper(p1.next, pv1 - 1, p2.next, pv2 - 1, ans);
+            sum = c + p1.data + p2.data;
+        }
+
+        int val = sum % 10;
+        int nc = sum / 10;
+
+        ans.addFirst(val);
+        return nc;
+
+    }
     
+    public static LinkedList addTwoLists(LinkedList one, LinkedList two) {
+        LinkedList ans = new LinkedList();
+        int c = add_helper(one.head, one.size - 1, two.head, two.size - 1, ans);
+        if (c == 1) {
+            ans.addFirst(c);
+        }
+        return ans;
+    }
+
     public static void main(String[] args) throws Exception {
         //input can be managed
     }
