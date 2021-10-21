@@ -46,6 +46,7 @@ public class Main {
 
 
 
+    //17th oct
 
     //mirror of generic tree
     public static void mirror(Node node) {
@@ -158,6 +159,141 @@ public class Main {
 
         return p1.get(i + 1);
     }
+
+
+
+    //21st oct
+
+    //distance between two nodes
+    public static int distanceBetweenNodes(Node node, int d1, int d2) {
+        ArrayList < Integer > p1 = nodeToRootPath(node, d1);
+        ArrayList < Integer > p2 = nodeToRootPath(node, d2);
+
+        int i = p1.size() - 1;
+        int j = p2.size() - 1;
+
+        while (i >= 0 && j >= 0 && p1.get(i) == p2.get(j)) {
+            i--;
+            j--;
+        }
+
+        //lca -> p1.get(i+1) or p2.get(j+1)
+
+        int v1 = (i + 1) - 0; //distance between lca and first node
+        int v2 = (j + 1) - 0; //distance between lca and second node
+
+        return v1 + v2;
+    }
+
+
+
+    //linearize - T : O(n^2)
+    public static void linearize(Node node) {
+
+        for (int i = 0; i < node.children.size(); i++) {
+            Node child = node.children.get(i);
+            linearize(child);
+        }
+
+
+        while (node.children.size() > 1) {
+            int s = node.children.size();
+            Node lc = node.children.get(s - 1);
+            Node slc = node.children.get(s - 2);
+
+            Node tail = getTail(slc);
+
+            node.children.remove(s - 1);
+            tail.children.add(lc);
+        }
+
+    }
+
+    public static Node getTail(Node node) {
+
+        while (node.children.size() == 1) {
+            node = node.children.get(0);
+        }
+
+        return node;
+    }
+
+
+
+
+    //linearize - T : O(n)
+    public static Node linearize(Node node) {
+        if (node.children.size() == 0) {
+            return node;
+        }
+
+        Node lc = node.children.get(node.children.size() - 1);
+        Node tail = linearize(lc);
+
+        while (node.children.size() > 1) {
+            int s = node.children.size();
+            Node slc = node.children.get(s - 2);
+
+            Node slct = linearize(slc); //second last child's tail
+
+            node.children.remove(s - 1);
+            slct.children.add(lc);
+
+            lc = slc;
+        }
+
+        return tail;
+    }
+
+
+
+    //are trees similar in shape
+    public static boolean areSimilar(Node n1, Node n2) {
+        if (n1.children.size() != n2.children.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < n1.children.size(); i++) {
+            Node c1 = n1.children.get(i);
+            Node c2 = n2.children.get(i);
+
+            if (areSimilar(c1, c2) == false) {
+                return false;
+            }
+        }
+
+
+        return true;
+
+    }
+
+
+
+    //are trees mirror in shape
+    public static boolean areMirror(Node n1, Node n2) {
+        if (n1.children.size() != n2.children.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < n1.children.size(); i++) {
+            Node c1 = n1.children.get(i);
+            Node c2 = n2.children.get(n2.children.size() - i - 1);
+
+            if (areMirror(c1, c2) == false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+
+    //is tree symmetric
+    public static boolean IsSymmetric(Node node) {
+        return areMirror(node, node);
+    }
+
 
     public static void main(String[] args) throws Exception {
         //input can be managed
