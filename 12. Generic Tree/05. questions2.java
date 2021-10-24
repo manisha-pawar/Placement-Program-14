@@ -133,7 +133,7 @@ public class Main {
 
 
 
-    //node with maximum subtree sum
+    //node with maximum subtree sum - using static variables
     static Node mssn;
     static int mss;
 
@@ -163,6 +163,124 @@ public class Main {
         return sum;
     }
 
+
+
+    //node with max subtree sum - using pair return type
+    public static class Pair {
+        int sum;
+        int mss; //max subtree sum
+        Node mssn; //max subtree sum node
+
+        Pair() {
+
+        }
+
+        Pair(int sum, int mss, Node mssn) {
+            this.sum = sum;
+            this.mss = mss;
+            this.mssn = mssn;
+        }
+    }
+
+    public static Pair maxSubtreeSum(Node node) {
+        int sum = node.data;
+        int mss = Integer.MIN_VALUE;
+        Node mssn = null;
+
+        for (int i = 0; i < node.children.size(); i++) {
+            Node child = node.children.get(i);
+            Pair cp = maxSubtreeSum(child);
+
+            sum += cp.sum;
+
+            if (cp.mss > mss) {
+                mss = cp.mss;
+                mssn = cp.mssn;
+            }
+        }
+
+
+        //node's contendor (subtree rooted at node)
+        if (sum > mss) {
+            mss = sum;
+            mssn = node;
+        }
+
+        return new Pair(sum, mss, mssn);
+    }
+
+
+
+
+    //diameter of generic tree
+    static int dia;
+    public static void diameter(Node root) {
+        dia = 0;
+        height(root);
+        System.out.println(dia);
+    }
+
+    public static int height(Node node) {
+        int bcht = -1; //best child height
+        int sbcht = -1; //second best child height
+
+        for (int i = 0; i < node.children.size(); i++) {
+            Node child = node.children.get(i);
+            int cht = height(child);
+
+            if (cht > bcht) {
+                sbcht = bcht;
+                bcht = cht;
+            } else if (cht > sbcht) {
+                sbcht = cht;
+            }
+        }
+
+        int dist = bcht + sbcht + 2; //node's contendor
+
+        if (dist > dia) {
+            dia = dist;
+        }
+
+        return bcht + 1;
+    }
+
+
+
+
+    //iterative preorder and postorder
+    public static void IterativePreandPostOrder(Node root) {
+        String pre = "";
+        String post = "";
+
+        Stack < Pair > st = new Stack < > ();
+        Pair rp = new Pair(root, -1);
+        st.push(rp);
+
+
+        while (st.size() > 0) {
+            Pair top = st.peek();
+            Node node = top.node;
+            int state = top.state;
+
+            if (state == -1) {
+                //pre area
+                pre += (node.data + " ");
+                top.state++;
+            } else if (state < node.children.size()) {
+                Node child = node.children.get(state);
+                st.push(new Pair(child, -1));
+                top.state++;
+            } else if (state == node.children.size()) {
+                //post
+                post += (node.data + " ");
+                st.pop();
+            }
+        }
+
+        System.out.println(pre);
+        System.out.println(post);
+    }
 
     public static void main(String[] args) throws Exception {
         //input can be managed
