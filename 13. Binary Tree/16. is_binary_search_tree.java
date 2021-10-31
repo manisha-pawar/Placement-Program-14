@@ -12,10 +12,6 @@ public class Main {
             this.left = left;
             this.right = right;
         }
-
-        Node(int data) {
-            this.data = data;
-        }
     }
 
     public static class Pair {
@@ -83,21 +79,35 @@ public class Main {
         display(node.right);
     }
 
-    public static Node createLeftCloneTree(Node node) {
+    public static class BSTPair {
+        int min;
+        int max;
+        boolean isBST;
+
+        BSTPair(int min, int max, boolean isBST) {
+            this.min = min;
+            this.max = max;
+            this.isBST = isBST;
+        }
+    }
+
+    public static BSTPair isBinarySearchTree(Node node) {
         if (node == null) {
-            return null;
+            return new BSTPair(Integer.MAX_VALUE, Integer.MIN_VALUE, true);
         }
 
-        Node ln = createLeftCloneTree(node.left); //left subtree root after cloning
-        Node rn = createLeftCloneTree(node.right); //right subtree root after cloning
+        BSTPair lp = isBinarySearchTree(node.left);
+        BSTPair rp = isBinarySearchTree(node.right);
 
-        node.right = rn;
-        Node cn = new Node(node.data); //cloned
-        node.left = cn;
-        cn.left = ln;
+        int min = Math.min(Math.min(lp.min, rp.min), node.data);
+        int max = Math.max(Math.max(lp.max, rp.max), node.data);
+        boolean isBST = (lp.isBST == true) && (rp.isBST == true) &&
+            ((lp.max < node.data) && (node.data < rp.min));
 
-        return node;
+        return new BSTPair(min, max, isBST);
+
     }
+
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -113,8 +123,9 @@ public class Main {
         }
 
         Node root = construct(arr);
-        root = createLeftCloneTree(root);
-        display(root);
+
+        BSTPair ans = isBinarySearchTree(root);
+        System.out.println(ans.isBST);
     }
 
 }
