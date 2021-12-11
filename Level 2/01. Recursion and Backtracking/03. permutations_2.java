@@ -1,0 +1,34 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void permutations(int cb, int n, int[] items, int ssf, int r, String asf) {
+        if (cb > n) {
+            if (ssf == r) {
+                System.out.println(asf);
+            }
+            return;
+        }
+
+        //yes calls - choose an item
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] == 0) {
+                items[i] = 1;
+                permutations(cb + 1, n, items, ssf + 1, r, asf + (i + 1));
+                items[i] = 0;
+            }
+        }
+
+        //no call
+        permutations(cb + 1, n, items, ssf, r, asf + "0");
+    }
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int nboxes = Integer.parseInt(br.readLine());
+        int ritems = Integer.parseInt(br.readLine());
+        permutations(1, nboxes, new int[ritems], 0, ritems, "");
+    }
+
+}
