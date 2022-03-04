@@ -20,7 +20,7 @@ public class Main {
                 map.put(ch, nf);
 
                 if (map.size() <= k) {
-                    //ans updatation
+                    //ans updation
                     count += (i - j);
                 } 
                 else {
